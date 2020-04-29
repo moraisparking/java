@@ -2,7 +2,7 @@
 # Projeto Morais Parking - Estacionamento - UNIESP
 #### Professora: Alana Morais
 #### Linguagem de desenvolvimento: Java
-#### Primeira entrega Java: 01/05/2020
+#### Primeira entrega: 01/05/2020
 ##### Grupo: Kru-Nami
 ##### Participantes:
 ##### Nome: Yuri Christian Carvalho Costa
