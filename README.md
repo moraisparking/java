@@ -1,4 +1,4 @@
-![java](https://user-images.githubusercontent.com/64562867/80657000-ddbb0d80-8a58-11ea-9820-986b0d0639ee.png)
+![java2](https://user-images.githubusercontent.com/64562867/80657652-93d32700-8a5a-11ea-882a-51d541ad8864.jpg)
 # Projeto Morais Parking - Estacionamento - UNIESP
 #### Professora: Alana Morais
 #### Linguagem de desenvolvimento: Java
