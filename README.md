@@ -8,4 +8,5 @@
 ##### Email: yuri-tech@outlook.com
 ##### Nome: Ericleiton Gomes de Macedo
 ##### Email: ericleitonmacedo@gmail.com
+##### OBS: O projeto está com um banco local e com a biblioteca JCalendar adicionada.
 ![java2](https://user-images.githubusercontent.com/64562867/80657652-93d32700-8a5a-11ea-882a-51d541ad8864.jpg)
