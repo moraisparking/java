@@ -34,7 +34,6 @@ import com.toedter.calendar.JDateChooser;
 import conexao.Conexao;
 import conexao.ConexaoEventos;
 import modelo.Eventos;
-import telas_extras.Erro;
 import java.awt.Checkbox;
 import java.awt.Button;
 import javax.swing.JTextArea;
@@ -76,7 +75,7 @@ public class MonitoramentoEvento extends JFrame {
 		setBounds(100, 100, 611, 395);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setBackground(new Color(225, 20, 35));
+		contentPane.setBackground(new Color(208, 50, 47));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
@@ -97,7 +96,7 @@ public class MonitoramentoEvento extends JFrame {
 		panel.add(btn_Sair);
 		
 		JLabel lblCadastroDeEventos = new JLabel("Monitoramento Eventos");
-		lblCadastroDeEventos.setBounds(12, 5, 120, 14);
+		lblCadastroDeEventos.setBounds(12, 5, 161, 14);
 		panel.add(lblCadastroDeEventos);
 		
 		JPanel panel_Salvar = new JPanel();
@@ -147,6 +146,8 @@ public class MonitoramentoEvento extends JFrame {
 					dtm.removeRow(0);
 				}
 				try {
+					
+					//pegar os eventos no banco e adicionar na tabela
 					Connection conexao = new Conexao().fazer_conexao();
 					ConexaoEventos pesquisarEvento = new ConexaoEventos(conexao);
 					for(Eventos x: pesquisarEvento.pesquisarEvento(status)) {
@@ -170,7 +171,7 @@ public class MonitoramentoEvento extends JFrame {
 		panel_Tabela.setBackground(Color.LIGHT_GRAY);
 		panel_Tabela.setLayout(null);
 		panel_Tabela.setBorder(new BevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, Color.GRAY, null, null));
-		panel_Tabela.setBounds(10, 177, 589, 181);
+		panel_Tabela.setBounds(10, 180, 589, 181);
 		contentPane.add(panel_Tabela);
 		
 		JScrollPane scrollPane = new JScrollPane();

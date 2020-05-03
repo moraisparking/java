@@ -16,6 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -25,7 +26,6 @@ import javax.swing.border.EmptyBorder;
 import conexao.Conexao;
 import conexao.ConexaoUsuario;
 import modelo.Usuario;
-import telas_extras.ErroLogin;
 import javax.swing.JButton;
 
 public class Acesso extends JFrame {
@@ -129,7 +129,7 @@ public class Acesso extends JFrame {
 					ConexaoUsuario verifica_usuario = new ConexaoUsuario(conexao);
 					boolean validacao = verifica_usuario.verificarUsuario(usuarioAcesso);
 					if(validacao != true) {
-						ErroLogin erro = new ErroLogin();
+						JOptionPane.showMessageDialog(null, "Usuário/Senha inválido ou caixa desmarcada!");
 						
 					}else {
 						Menu menu = new Menu();

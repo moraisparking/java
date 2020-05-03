@@ -21,13 +21,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.SoftBevelBorder;
 
 import conexao.Conexao;
 import conexao.ConexaoEventos;
 import conexao.ConexaoVeiculo;
 import modelo.UsuarioVeiculo;
-import telas_extras.Erro;
 
 public class RemoverVeiculo extends JFrame {
 
@@ -85,6 +86,20 @@ public class RemoverVeiculo extends JFrame {
 		lblMoraisParking.setBounds(161, 428, 239, 48);
 		panel.add(lblMoraisParking);
 		
+		JPanel panel_TituloTela = new JPanel();
+		panel_TituloTela.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		panel_TituloTela.setBounds(60, 54, 245, 28);
+		panel_TituloTela.setBackground(new Color(208, 50, 47));
+		panel.add(panel_TituloTela);
+		panel_TituloTela.setLayout(null);
+		
+		JLabel lblCadastroDeVeculos = new JLabel("REMOVER VE\u00CDCULO");
+		lblCadastroDeVeculos.setBounds(25, 4, 192, 21);
+		panel_TituloTela.add(lblCadastroDeVeculos);
+		lblCadastroDeVeculos.setForeground(Color.WHITE);
+		lblCadastroDeVeculos.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblCadastroDeVeculos.setHorizontalAlignment(SwingConstants.CENTER);
+		
 		JLabel lbl_imgLogoUniesp = new JLabel("");
 		lbl_imgLogoUniesp.setIcon(new ImageIcon(Acesso.class.getResource("/imagens/uniesp pequeno.jpg")));
 		lbl_imgLogoUniesp.setVerticalAlignment(SwingConstants.TOP);
@@ -113,12 +128,13 @@ public class RemoverVeiculo extends JFrame {
 				
 				String placa = tf_placa.getText();
 				if(tf_placa.getText().equals("")) {
-					Erro erro = new Erro();
+					JOptionPane.showMessageDialog(null, "Campos * são obrigatórios!");
 				}else {
 					try {
 						UsuarioVeiculo pesquisarPlaca = new UsuarioVeiculo(placa);
 						Connection conexao = new Conexao().fazer_conexao();
 						ConexaoVeiculo removerVeiculo = new ConexaoVeiculo(conexao);
+						//remove o veiculo (Deixa AUSENTE)
 						removerVeiculo.removerVeiculo(pesquisarPlaca);
 						JOptionPane.showMessageDialog(null, "Veículo removido com sucesso!");
 						tf_matricula.setText("");
@@ -211,6 +227,7 @@ public class RemoverVeiculo extends JFrame {
 						Connection conexao = new Conexao().fazer_conexao();
 						ConexaoVeiculo pesquisarVeiculo = new ConexaoVeiculo(conexao);
 						pesquisarVeiculo.pesquisarVeiculo(veiculo);
+						//setar nos campotes as informações pegas no banco mediante a placa inserida
 						if (!veiculo.getStatus().equalsIgnoreCase("AUSENTE")) {
 							tf_matricula.setText(veiculo.getMatricula());
 							tf_nome.setText(veiculo.getNome());

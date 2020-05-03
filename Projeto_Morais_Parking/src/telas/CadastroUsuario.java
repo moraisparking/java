@@ -5,13 +5,13 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.SoftBevelBorder;
 
 import conexao.Conexao;
 import conexao.ConexaoUsuario;
 import modelo.Usuario;
-import telas_extras.Erro;
-import telas_extras.Sucesso;
 
 import java.awt.Panel;
 import java.awt.Color;
@@ -90,6 +90,20 @@ public class CadastroUsuario extends JFrame {
 		lblMoraisParking.setBounds(161, 428, 239, 48);
 		panel.add(lblMoraisParking);
 		
+		JPanel panel_TituloTela = new JPanel();
+		panel_TituloTela.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		panel_TituloTela.setBounds(60, 54, 245, 28);
+		panel_TituloTela.setBackground(new Color(208, 50, 47));
+		panel.add(panel_TituloTela);
+		panel_TituloTela.setLayout(null);
+		
+		JLabel lblCadastroDeVeculos = new JLabel("CADASTRO DE USU\u00C1RIO");
+		lblCadastroDeVeculos.setBounds(25, 4, 192, 21);
+		panel_TituloTela.add(lblCadastroDeVeculos);
+		lblCadastroDeVeculos.setForeground(Color.WHITE);
+		lblCadastroDeVeculos.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblCadastroDeVeculos.setHorizontalAlignment(SwingConstants.CENTER);
+		
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setIcon(new ImageIcon(CadastroUsuario.class.getResource("/imagens/uniesp pequeno.jpg")));
 		lblNewLabel.setVerticalAlignment(SwingConstants.TOP);
@@ -142,14 +156,14 @@ public class CadastroUsuario extends JFrame {
 				//Armazenar em um objeto usuairo
 				try {
 					if(tf_usuario.getText().equals("") || tf_email.getText().equals("") || new String(pf_senha.getPassword()).equals("")) {
-						Erro erro = new Erro();						
+						JOptionPane.showMessageDialog(null, "Campos * são obrigatórios!");					
 					}else {
 						//Criar um objeto do tipo Connection para conectar e conectar ao banco com o método
 						Connection conexao = new Conexao().fazer_conexao();
 						//Criar um objeto para conectar o usuario
 						ConexaoUsuario conectar_usuario = new ConexaoUsuario(conexao);
 						conectar_usuario.inserirConexao(usuarioCadastro);
-						Sucesso sucesso = new Sucesso();	
+						JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
 						tf_usuario.setText("");
 						tf_email.setText("");
 						pf_senha.setText("");

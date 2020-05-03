@@ -34,7 +34,6 @@ import com.toedter.calendar.JDateChooser;
 import conexao.Conexao;
 import conexao.ConexaoEventos;
 import modelo.Eventos;
-import telas_extras.Erro;
 import java.awt.Window.Type;
 import java.awt.Dialog.ModalExclusionType;
 
@@ -79,7 +78,7 @@ public class CadastroEvento extends JFrame {
 		setBounds(100, 100, 611, 395);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setBackground(new Color(225, 20, 35));
+		contentPane.setBackground(new Color(208, 50, 47));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
@@ -127,7 +126,7 @@ public class CadastroEvento extends JFrame {
 		tf_Vagas.setBounds(136, 39, 183, 20);
 		panel_Salvar.add(tf_Vagas);
 		tf_Vagas.setColumns(10);
-		//Deixar o campo de vagas extras visivel
+		//Deixar o campo(textfild) de vagas extras visivel
 		JCheckBox clickbx_VagasExtras = new JCheckBox("Vagas Extras");
 		clickbx_VagasExtras.setBackground(Color.LIGHT_GRAY);
 		clickbx_VagasExtras.addActionListener(new ActionListener() {
@@ -168,6 +167,7 @@ public class CadastroEvento extends JFrame {
 		
 		table = new JTable();
 		table.setBackground(Color.LIGHT_GRAY);
+		//inicio da função editar campos na tabel
 //		table.addMouseListener(new MouseAdapter() {
 //			@Override
 //			public void mouseClicked(MouseEvent e) {
@@ -205,10 +205,10 @@ public class CadastroEvento extends JFrame {
 						jc_Data_Fim.getDate() == null || tf_Vagas.getText().equals("")  || 
 								comboBox.getSelectedItem().equals("Selecionar...")){
 					if(clickbx_VagasExtras.isSelected() && tf_VagasExtras.getText().equals("")) {
-						Erro erro = new Erro();
+						JOptionPane.showMessageDialog(null, "Campos * são obrigatórios!");
 					}
-					Erro erro = new Erro();
-				//caso nenhum campo estiver vazio, inserir os campos na tabela	
+					JOptionPane.showMessageDialog(null, "Campos * são obrigatórios!");
+				//caso nenhum campo esteja vazio, inserir os campos na tabela	
 				}else {
 					dtm = (DefaultTableModel) table.getModel();
 					String novoEvento = tf_Evento.getText();
@@ -232,7 +232,7 @@ public class CadastroEvento extends JFrame {
 					jc_Data_Inicio.setCalendar(null);
 					jc_Data_Fim.setCalendar(null);
 					tf_Vagas.setText("");
-					tf_VagasExtras.setText("");
+					tf_VagasExtras.setText(Integer.toString(0));
 					comboBox.setSelectedItem("Selecionar...");
 				}
 			}
@@ -298,6 +298,7 @@ public class CadastroEvento extends JFrame {
 		JButton btn_Editar = new JButton("");
 		btn_Editar.setBackground(Color.LIGHT_GRAY);
 		//continuação do cod para editar
+		//não sei se implemento ainda
 //		btn_Editar.addActionListener(new ActionListener() {
 //			public void actionPerformed(ActionEvent e) {
 //				
@@ -327,10 +328,6 @@ public class CadastroEvento extends JFrame {
 		JLabel label_1 = new JLabel("*");
 		label_1.setBounds(322, 39, 18, 14);
 		panel_Salvar.add(label_1);
-		
-		JLabel label_2 = new JLabel("*");
-		label_2.setBounds(322, 70, 18, 14);
-		panel_Salvar.add(label_2);
 		
 		JLabel label_4 = new JLabel("*");
 		label_4.setBounds(572, 39, 18, 14);
@@ -382,21 +379,26 @@ public class CadastroEvento extends JFrame {
 					}else {
 						for(int i = 0; i < dtm.getRowCount(); i++ ) {
 							try {
+								//fazer a conexao
 								Connection conexao = new Conexao().fazer_conexao();
 								ConexaoEventos inserirEvento = new ConexaoEventos(conexao);
+								//pegar os valores da linha(row) x nas colunas 0 em diante
 								novoEvento = (String) dtm.getValueAt(x, 0);
 								inicio = sdf.parse((String) dtm.getValueAt(x, 1));
 								fim = sdf.parse((String) dtm.getValueAt(x, 2));
 								local = (String) dtm.getValueAt(x, 3);
 								vagas = (int) dtm.getValueAt(x, 4);
+								//verificar se vagas extras está selecionado
 								if(clickbx_VagasExtras.isSelected()) {
 									vagasExtras = (int) dtm.getValueAt(x, 5);
 								}
+								//salvar os valores da tabela no banco
 								Eventos evento = new Eventos(novoEvento, inicio, fim, local, vagas, vagasExtras);
 								inserirEvento.inserirEvento(evento);
 							}catch (ParseException | SQLException e1) {
 								JOptionPane.showMessageDialog(null, "Erro ao converter data ou com a conexão com o banco!" + e1);
 							}
+							//incremento da linha
 							x++;
 						}
 						JOptionPane.showMessageDialog(null, "Dados salvos com sucessso!");

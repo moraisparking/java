@@ -25,7 +25,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.SoftBevelBorder;
 
 import conexao.Conexao;
 import conexao.ConexaoUsuario;
@@ -35,13 +37,8 @@ import modelo.UsuarioVeiculo;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.border.MatteBorder;
-import javax.swing.border.SoftBevelBorder;
 
-public class CadastroVeiculo extends JFrame {
+public class IdentificarVeiculos extends JFrame {
 
 	private JPanel contentPane;
 	int xx;
@@ -59,7 +56,7 @@ public class CadastroVeiculo extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					CadastroVeiculo frame = new CadastroVeiculo();
+					IdentificarVeiculos frame = new IdentificarVeiculos();
 					frame.setUndecorated(true);
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -72,7 +69,7 @@ public class CadastroVeiculo extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public CadastroVeiculo() {
+	public IdentificarVeiculos() {
 		setType(Type.POPUP);
 		setResizable(false);
 		setBackground(Color.WHITE);
@@ -99,13 +96,13 @@ public class CadastroVeiculo extends JFrame {
 		
 		JPanel panel_TituloTela = new JPanel();
 		panel_TituloTela.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel_TituloTela.setBounds(60, 54, 245, 28);
+		panel_TituloTela.setBounds(21, 55, 320, 28);
 		panel_TituloTela.setBackground(new Color(208, 50, 47));
 		panel.add(panel_TituloTela);
 		panel_TituloTela.setLayout(null);
 		
-		JLabel lblCadastroDeVeculos = new JLabel("CADASTRO DE VE\u00CDCULOS");
-		lblCadastroDeVeculos.setBounds(25, 4, 192, 21);
+		JLabel lblCadastroDeVeculos = new JLabel("IDENTIFICA\u00C7\u00C3O DE VE\u00CDCULO");
+		lblCadastroDeVeculos.setBounds(10, 4, 285, 21);
 		panel_TituloTela.add(lblCadastroDeVeculos);
 		lblCadastroDeVeculos.setForeground(Color.WHITE);
 		lblCadastroDeVeculos.setFont(new Font("Tahoma", Font.PLAIN, 17));
@@ -118,11 +115,11 @@ public class CadastroVeiculo extends JFrame {
 		panel.add(lbl_imgLogoUniesp);
 		
 		JLabel lbl_matricula = new JLabel("MATR\u00CDCULA");
-		lbl_matricula.setBounds(424, 38, 82, 14);
+		lbl_matricula.setBounds(424, 114, 82, 14);
 		contentPane.add(lbl_matricula);
 		
 		tf_matricula = new JTextField();
-		tf_matricula.setBounds(424, 63, 319, 30);
+		tf_matricula.setBounds(424, 139, 319, 30);
 		contentPane.add(tf_matricula);
 		tf_matricula.setColumns(10);
 		
@@ -138,22 +135,64 @@ public class CadastroVeiculo extends JFrame {
 	
 		
 		JLabel lbl_nome = new JLabel("NOME");
-		lbl_nome.setBounds(424, 110, 82, 14);
+		lbl_nome.setBounds(424, 186, 82, 14);
 		contentPane.add(lbl_nome);
 		
 		tf_nome = new JTextField();
 		tf_nome.setColumns(10);
-		tf_nome.setBounds(424, 135, 319, 30);
+		tf_nome.setBounds(424, 211, 319, 30);
 		contentPane.add(tf_nome);
 		
 		JLabel lbl_placa = new JLabel("PLACA");
-		lbl_placa.setBounds(424, 180, 82, 14);
+		lbl_placa.setBounds(424, 48, 82, 14);
 		contentPane.add(lbl_placa);
 		
 		tf_placa = new JTextField();
 		tf_placa.setColumns(10);
-		tf_placa.setBounds(424, 205, 118, 30);
+		tf_placa.setBounds(424, 73, 118, 30);
 		contentPane.add(tf_placa);
+		
+		JButton btn_Lupa = new JButton("");
+		btn_Lupa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				UsuarioVeiculo placa = new UsuarioVeiculo(tf_placa.getText());
+				try {
+					Connection conexao = new Conexao().fazer_conexao();
+					ConexaoVeiculo verificarVeiculo = new ConexaoVeiculo(conexao);
+					if(tf_placa.getText().equals("")) {
+						JOptionPane.showMessageDialog(null, "Para verificar um veículo inserir uma placa é obrigatório!" );
+					}else {
+						if(verificarVeiculo.verificarVeiculo(placa)) {
+							tf_matricula.setText(placa.getMatricula());
+							tf_nome.setText(placa.getNome());
+							tf_marca.setText(placa.getMarca());
+							tf_tipo.setText(placa.getTipo());
+						}else {
+							Object[] op = {"SIM","NÃO"};
+							int rs = JOptionPane.showOptionDialog(null, "Vaículo não encontrado! Deseja cadastrá-lo?", "Erro!", JOptionPane.YES_NO_OPTION, 
+									JOptionPane.QUESTION_MESSAGE,null, op,op);
+							if(rs == 0) {
+								CadastroVeiculo passarTela = new CadastroVeiculo();
+								passarTela.setUndecorated(true);
+								passarTela.setLocationRelativeTo(null);
+								passarTela.setVisible(true);
+								setVisible(false);
+							}
+						}
+					}
+					
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco " + e1);
+				}
+								
+				
+			}
+		});
+		btn_Lupa.setIcon(new ImageIcon(IdentificarVeiculos.class.getResource("/imagens/magnifier.png")));
+		btn_Lupa.setBounds(545, 77, 16, 16);
+		contentPane.add(btn_Lupa);
 		
 		JLabel lbl_marca = new JLabel("MARCA DO VE\u00CDCULO");
 		lbl_marca.setBounds(424, 252, 153, 14);
@@ -174,17 +213,11 @@ public class CadastroVeiculo extends JFrame {
 		contentPane.add(tf_tipo);
 		
 		JComboBox combob_bloco = new JComboBox();
-		Button btn_salvarCadastro = new Button("CADASTRAR");
-		btn_salvarCadastro.addActionListener(new ActionListener() {
+		Button btn_Inserir = new Button("INSERIR");
+		btn_Inserir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String matricula = tf_matricula.getText();
-				String nome = tf_nome.getText();
-				String placa = tf_placa.getText();
-				String marca = tf_marca.getText();
-				String tipo = tf_tipo.getText();
 				
-
-				UsuarioVeiculo veiculo = new UsuarioVeiculo(matricula, nome, placa, marca, tipo);
+				UsuarioVeiculo veiculo = new UsuarioVeiculo(tf_matricula.getText(),tf_nome.getText(),tf_placa.getText(),tf_marca.getText(),tf_tipo.getText());;
 
 				try {
 					if (tf_matricula.getText().equals("") || tf_nome.getText().equals("")
@@ -193,7 +226,7 @@ public class CadastroVeiculo extends JFrame {
 						JOptionPane.showMessageDialog(null, "Campos * são obrigatórios!");
 					}else {
 						if(combob_bloco.getSelectedItem().equals("Selecionar...")) {
-							JOptionPane.showMessageDialog(null, "Campos * são obrigatórios!");
+							JOptionPane.showMessageDialog(null, "Selecionar um local para estacionar!");
 						}else if(combob_bloco.getSelectedItem().equals("Bloco A")) {
 							veiculo.setBloco("bloco_A");
 						}else if(combob_bloco.getSelectedItem().equals("Bloco B")) {
@@ -213,8 +246,8 @@ public class CadastroVeiculo extends JFrame {
 						}
 						Connection conexao = new Conexao().fazer_conexao();
 						ConexaoVeiculo cadastrar_Veiculo = new ConexaoVeiculo(conexao);
-						cadastrar_Veiculo.inserirVeiculo(veiculo);
-						JOptionPane.showMessageDialog(null, "Veículo cadastrado com sucesso!");
+						cadastrar_Veiculo.atualizarVeiculos(veiculo);
+						JOptionPane.showMessageDialog(null, "Veículo inserido com sucesso!");
 						tf_matricula.setText("");
 						tf_nome.setText("");
 						tf_placa.setText("");
@@ -224,8 +257,7 @@ public class CadastroVeiculo extends JFrame {
 					
 
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco\n" + e1);
 				}
 				combob_bloco.setSelectedIndex(0);
 				
@@ -233,11 +265,11 @@ public class CadastroVeiculo extends JFrame {
 				
 			}
 		});
-		btn_salvarCadastro.setForeground(Color.WHITE);
-		btn_salvarCadastro.setFont(new Font("Dialog", Font.BOLD, 13));
-		btn_salvarCadastro.setBackground(new Color(225, 20, 35));
-		btn_salvarCadastro.setBounds(451, 402, 118, 30);
-		contentPane.add(btn_salvarCadastro);
+		btn_Inserir.setForeground(Color.WHITE);
+		btn_Inserir.setFont(new Font("Dialog", Font.BOLD, 13));
+		btn_Inserir.setBackground(new Color(225, 20, 35));
+		btn_Inserir.setBounds(451, 402, 118, 30);
+		contentPane.add(btn_Inserir);
 		
 		Button bnt_voltar = new Button("MENU");
 		bnt_voltar.addActionListener(new ActionListener() {
@@ -258,32 +290,27 @@ public class CadastroVeiculo extends JFrame {
 		contentPane.add(bnt_voltar);
 		
 		JLabel lbl_bloco = new JLabel("BLOCO");
-		lbl_bloco.setBounds(625, 180, 48, 14);
+		lbl_bloco.setBounds(625, 48, 48, 14);
 		contentPane.add(lbl_bloco);
 		
 		
 		combob_bloco.setModel(new DefaultComboBoxModel(new String[] {"Selecionar...", "Bloco Central", "Bloco A", "Bloco B", "Bloco C", "Bloco D", "Bloco E", "Bloco F", "Bloco G"}));
-		combob_bloco.setBounds(625, 205, 118, 30);
+		combob_bloco.setBounds(625, 73, 118, 30);
 		contentPane.add(combob_bloco);
 		
 		JLabel lblNewLabel = new JLabel("*");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblNewLabel.setBounds(747, 57, 48, 14);
+		lblNewLabel.setBounds(747, 133, 48, 14);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("*");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblNewLabel_1.setBounds(747, 128, 48, 14);
+		lblNewLabel_1.setBounds(747, 204, 48, 14);
 		contentPane.add(lblNewLabel_1);
-		
-		JLabel lblNewLabel_2 = new JLabel("*");
-		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblNewLabel_2.setBounds(543, 200, 48, 14);
-		contentPane.add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_3 = new JLabel("*");
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblNewLabel_3.setBounds(747, 200, 48, 14);
+		lblNewLabel_3.setBounds(747, 68, 48, 14);
 		contentPane.add(lblNewLabel_3);
 		
 		JLabel lblNewLabel_4 = new JLabel("*");
@@ -317,7 +344,7 @@ public class CadastroVeiculo extends JFrame {
 				
 				int x = e.getXOnScreen();
 				int y = e.getYOnScreen();
-				CadastroVeiculo.this.setLocation(x - xx, y - xy);
+				IdentificarVeiculos.this.setLocation(x - xx, y - xy);
 				
 				
 			}

@@ -36,6 +36,8 @@ import modelo.Vagas;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import com.toedter.calendar.JDateChooser;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.EtchedBorder;
 
 
 public class Menu extends JFrame {
@@ -71,10 +73,19 @@ public class Menu extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 799, 471);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(225, 20, 35));
+		contentPane.setBackground(new Color(208, 50, 47));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel_4 = new JLabel("Total:");
+		JTextPane tp_tvagas = new JTextPane();
+		JLabel lblVagasEspeciis = new JLabel("Carros:");
+		JTextPane tp_carros = new JTextPane();
+		JLabel lblVagasMotos = new JLabel("Especiais:");
+		JLabel lblNewLabel_1 = new JLabel("Motos:");
+		JTextPane tp_motos = new JTextPane();
+		JTextPane tp_especiais = new JTextPane();
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBounds(0, 0, 811, 22);
@@ -124,6 +135,20 @@ public class Menu extends JFrame {
 						setVisible(false);
 					}
 				});
+				
+				JMenuItem mi_InserirVeiculo = new JMenuItem("Identificar Ve\u00EDculo");
+				mi_InserirVeiculo.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						IdentificarVeiculos passarTela = new IdentificarVeiculos();
+						passarTela.setUndecorated(true);
+						passarTela.setLocationRelativeTo(null);
+						passarTela.setVisible(true);
+						setVisible(false);
+						
+					}
+				});
+				mi_InserirVeiculo.setIcon(new ImageIcon(Menu.class.getResource("/imagens/paste_plain.png")));
+				m_funcoes.add(mi_InserirVeiculo);
 				m_funcoes.add(mi_remover_veiculo);
 				
 				JMenuItem mi_cadastrar_veiculo = new JMenuItem("Cadastrar Ve\u00EDculos");
@@ -163,6 +188,15 @@ public class Menu extends JFrame {
 				menuBar.add(m_Monitoramento);
 				
 				JMenuItem mi_eventoMon = new JMenuItem("Eventos");
+				mi_eventoMon.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						MonitoramentoEvento passarTela = new MonitoramentoEvento();
+						passarTela.setUndecorated(true);
+						passarTela.setLocationRelativeTo(null);
+						passarTela.setVisible(true);
+						
+					}
+				});
 				mi_eventoMon.setIcon(new ImageIcon(Menu.class.getResource("/imagens/eye.png")));
 				m_Monitoramento.add(mi_eventoMon);
 				
@@ -174,15 +208,12 @@ public class Menu extends JFrame {
 				menuBar.add(mnRelatrios);
 				
 				JMenuItem mntmVisualizar = new JMenuItem("Visualizar");
+				mntmVisualizar.setIcon(new ImageIcon(Menu.class.getResource("/imagens/pdf.png")));
 				mnRelatrios.add(mntmVisualizar);
 				
 				JMenuItem mntmExtrair = new JMenuItem("Extrair");
+				mntmExtrair.setIcon(new ImageIcon(Menu.class.getResource("/imagens/pdf.png")));
 				mnRelatrios.add(mntmExtrair);
-				
-				JTextPane tp_tvagas = new JTextPane();
-				JTextPane tp_carros = new JTextPane();
-				JTextPane tp_especiais = new JTextPane();
-				JTextPane tp_motos = new JTextPane();
 				
 				JPanel panel_Tablea = new JPanel();
 				panel_Tablea.setBackground(Color.LIGHT_GRAY);
@@ -228,25 +259,28 @@ public class Menu extends JFrame {
 										DefaultTableModel dtm = (DefaultTableModel) table.getModel();
 										
 										
-										
+										//if e elses para trazer as informações do banco relacionados ao estacionamento por bloco
 										if(combob_blocos.getSelectedItem().equals("Selecionar...")){
 											
 										}else if(combob_blocos.getSelectedItem().equals("Bloco A")){
 											UsuarioVeiculo bloco = new UsuarioVeiculo();
 											bloco.setBloco("bloco_A");
 											Vagas vagas = new Vagas("bloco_A");
+											//zera a tabela quando muda de bloco
 											while(dtm.getRowCount() != 0) {
 												dtm.removeRow(0);
 											}
 											try {
+												//faz a conexao
 												Connection conexao = new Conexao().fazer_conexao();
 												ConexaoVeiculo lista = new ConexaoVeiculo(conexao);
+												//método para setar a quantidade de vagas em seus devidos campos
 												lista.qntDeVagasPorBloco(vagas);
 												tp_motos.setText(Integer.toString(vagas.totalVagasMoto()));
 												tp_carros.setText(Integer.toString(vagas.totalVagasCarro()));
 												tp_especiais.setText(Integer.toString(vagas.totalVagasEspeciais()));
 												tp_tvagas.setText(Integer.toString(vagas.totalVagas()));
-												
+												//for para adicionar os elementos na tabela
 												for(UsuarioVeiculo x:lista.pesquisarVeiculoPorBloco(bloco.getBloco())) {
 													Object [] dado = {x.getMatricula(),x.getNome(),x.getPlaca(),x.getMarca(),
 															x.getTipo(),sdf.format(x.getData()),x.getHora(),x.getStatus(),x.getBloco()};
@@ -389,8 +423,8 @@ public class Menu extends JFrame {
 											
 										}else if(combob_blocos.getSelectedItem().equals("Bloco G")){
 											UsuarioVeiculo bloco = new UsuarioVeiculo();
-											bloco.setBloco("bloco_G");
 											Vagas vagas = new Vagas("bloco_G");
+											bloco.setBloco("bloco_G");											
 											while(dtm.getRowCount() != 0) {
 												dtm.removeRow(0);
 											}
@@ -412,6 +446,7 @@ public class Menu extends JFrame {
 												// TODO Auto-generated catch block
 												e1.printStackTrace();
 											}
+											
 											
 										}else if(combob_blocos.getSelectedItem().equals("Bloco Central")){
 											UsuarioVeiculo bloco = new UsuarioVeiculo();
@@ -446,40 +481,58 @@ public class Menu extends JFrame {
 								combob_blocos.setModel(new DefaultComboBoxModel(new String[] {"Selecionar...", "Bloco Central", "Bloco A", "Bloco B", 
 										"Bloco C", "Bloco D", "Bloco E", "Bloco F", "Bloco G"}));
 								
+								JPanel panel_Vagas = new JPanel();
+								panel_Vagas.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+								panel_Vagas.setBackground(Color.LIGHT_GRAY);
+								panel_Vagas.setBounds(341, 11, 229, 83);
+								panel.add(panel_Vagas);
+								panel_Vagas.setLayout(null);
 								
-								JLabel lblNewLabel_4 = new JLabel("Total de Vagas:");
-								lblNewLabel_4.setBounds(10, 73, 89, 14);
-								panel.add(lblNewLabel_4);
+								
+								
+								lblNewLabel_4.setBounds(10, 18, 51, 14);
+								panel_Vagas.add(lblNewLabel_4);
 								lblNewLabel_4.setForeground(Color.BLACK);
-								tp_tvagas.setBounds(102, 70, 37, 22);
-								panel.add(tp_tvagas);
+								
+								
+								tp_tvagas.setBounds(65, 11, 37, 22);
+								panel_Vagas.add(tp_tvagas);
 								tp_tvagas.setEditable(false);
 								
 								
-								JLabel lblVagasEspeciis = new JLabel("Vagas de Carros:");
-								lblVagasEspeciis.setBounds(149, 73, 101, 14);
-								panel.add(lblVagasEspeciis);
+								
+								lblVagasEspeciis.setBounds(10, 51, 51, 14);
+								panel_Vagas.add(lblVagasEspeciis);
 								lblVagasEspeciis.setForeground(Color.BLACK);
-								tp_carros.setBounds(253, 68, 37, 22);
-								panel.add(tp_carros);
+								
+								tp_carros.setBounds(65, 45, 37, 22);
+								panel_Vagas.add(tp_carros);
 								tp_carros.setEditable(false);
 								
-								JLabel lblVagasMotos = new JLabel("Vagas Especiais:");
-								lblVagasMotos.setBounds(453, 73, 101, 14);
-								panel.add(lblVagasMotos);
+								
+								lblVagasMotos.setBounds(112, 18, 64, 14);
+								panel_Vagas.add(lblVagasMotos);
 								lblVagasMotos.setForeground(Color.BLACK);
-								tp_especiais.setBounds(555, 68, 37, 22);
-								panel.add(tp_especiais);
+								
+								tp_especiais.setBounds(176, 11, 37, 22);
+								panel_Vagas.add(tp_especiais);
 								tp_especiais.setEditable(false);
 								
-								JLabel lblNewLabel_1 = new JLabel("Vagas de Motos:");
-								lblNewLabel_1.setBounds(304, 73, 101, 14);
-								panel.add(lblNewLabel_1);
+								
+								lblNewLabel_1.setBounds(112, 51, 60, 14);
+								panel_Vagas.add(lblNewLabel_1);
 								lblNewLabel_1.setForeground(Color.BLACK);
-								tp_motos.setBounds(403, 68, 37, 22);
-								panel.add(tp_motos);
+								
+								tp_motos.setBounds(176, 45, 37, 22);
+								panel_Vagas.add(tp_motos);
 								tp_motos.setEditable(false);
+								
+								JLabel lblVagasDiponveis = new JLabel("Vagas Dipon\u00EDveis:");
+								lblVagasDiponveis.setBounds(228, 15, 113, 14);
+								panel.add(lblVagasDiponveis);								
+								
 				
+				//funções para muver a tela ao clicar
 				JLabel lblNewLabel = new JLabel("");
 				lblNewLabel.setBounds(0, 0, 811, 471);
 				contentPane.add(lblNewLabel);

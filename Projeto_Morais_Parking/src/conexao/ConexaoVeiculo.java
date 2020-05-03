@@ -11,11 +11,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JOptionPane;
+
 import com.mysql.jdbc.PreparedStatement;
 
 import modelo.UsuarioVeiculo;
 import modelo.Vagas;
-import telas_extras.Erro;
+
 
 public class ConexaoVeiculo {
 	
@@ -44,6 +46,45 @@ public class ConexaoVeiculo {
 		stmt.execute();
 		stmt.close();
 	}
+	
+	public boolean verificarVeiculo(UsuarioVeiculo placa) throws SQLException {
+		String sql = "select * from veiculos where placa = ? and status = 'AUSENTE';";
+		
+		PreparedStatement stmt = (PreparedStatement) conexao.prepareStatement(sql);
+		
+		stmt.setString(1, placa.getPlaca());
+		
+		stmt.execute();
+		
+		ResultSet resultado = stmt.getResultSet();
+		
+		boolean temp;
+		if(resultado.next()) {
+			
+			placa.setMatricula(resultado.getString("matricula"));
+			placa.setNome(resultado.getString("nome"));
+			placa.setMarca(resultado.getString("marca"));
+			placa.setTipo(resultado.getString("tipo"));
+			temp = true;
+		}else {
+			temp = false;
+		}
+		return temp;
+		
+	}
+	public void atualizarVeiculos(UsuarioVeiculo veiculo) throws SQLException {
+		
+		String sql = "update veiculos set data = curdate(), hora = curtime(),status = 'PRESENTE', bloco = ? where placa = ?;";
+		
+		PreparedStatement stmt = (PreparedStatement) conexao.prepareStatement(sql);
+		
+		stmt.setString(1, veiculo.getBloco());
+		stmt.setString(2, veiculo.getPlaca());
+		
+		stmt.execute();
+		stmt.close();
+	}
+	//remover seria no caso setar no campo status AUSENTE
 	public void removerVeiculo(UsuarioVeiculo placa) throws SQLException {
 		
 		String sql = "update veiculos set status = 'AUSENTE', data = curdate(), hora = curtime() where placa = ?;";
@@ -75,7 +116,7 @@ public class ConexaoVeiculo {
 			veiculo.setTipo(resultado.getString("tipo"));
 			veiculo.setStatus(resultado.getString("status"));
 		}else {
-			Erro erro = new Erro();
+			JOptionPane.showMessageDialog(null, "Veículo não encontrado!");
 		}
 		stmt.close();
 		
@@ -124,7 +165,7 @@ public class ConexaoVeiculo {
 		return tabela;
 		
 	}
-	
+	//em fase de teste e melhorias
 	public void qntDeVagasPorBloco(Vagas local) throws SQLException {
 	
 		
@@ -148,68 +189,65 @@ public class ConexaoVeiculo {
 		ResultSet resultado = stmt.getResultSet();
 		ResultSet resultado2 = stmt2.getResultSet();
 		ResultSet resultado3 = stmt3.getResultSet();
+
 		if(resultado.next()) {
 			
-			if(local.getLocal().equals(resultado.getString("bloco_A"))) {
+			if(local.getLocal().equals(resultado.getString(1))) {
 				local.setCarro(resultado.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado.getString("bloco_B"))) {
+			}else if(local.getLocal().equals(resultado.getString(1))) {
 				local.setCarro(resultado.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado.getString("bloco_C"))) {
+			}else if(local.getLocal().equals(resultado.getString(1))) {
 				local.setCarro(resultado.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado.getString("bloco_D"))) {
+			}else if(local.getLocal().equals(resultado.getString(1))) {
 				local.setCarro(resultado.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado.getString("bloco_E"))) {
+			}else if(local.getLocal().equals(resultado.getString(1))) {
 				local.setCarro( resultado.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado.getString("bloco_F"))) {
+			}else if(local.getLocal().equals(resultado.getString(1))) {
 				local.setCarro(resultado.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado.getString("bloco_G"))) {
+			}else if(local.getLocal().equals(resultado.getString(1))) {
 				local.setCarro(resultado.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado.getString("bloco_central"))) {
+			}else if(local.getLocal().equals(resultado.getString(1))) {
 				local.setCarro(resultado.getInt("qnt"));
 			}
 		}
 		if(resultado2.next()) {
 			
-			String x = local.getLocal();
-			System.out.println(x);
-			System.out.println(y);
-			
-			if(local.getLocal().equals(resultado2.getString("bloco_A"))) {
+			if(local.getLocal().equals(resultado2.getString(1))) {
 				local.setMoto(resultado2.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado2.getString("bloco_B"))) {
+			}else if(local.getLocal().equals(resultado2.getString(1))) {
 				local.setMoto(resultado2.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado2.getString("bloco_C"))) {
+			}else if(local.getLocal().equals(resultado2.getString(1))) {
 				local.setMoto(resultado2.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado2.getString("bloco_D"))) {
+			}else if(local.getLocal().equals(resultado2.getString(1))) {
 				local.setMoto(resultado2.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado2.getString("bloco_E"))) {
+			}else if(local.getLocal().equals(resultado2.getString(1))) {
 				local.setMoto(resultado2.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado2.getString("bloco_F"))) {
+			}else if(local.getLocal().equals(resultado2.getString(1))) {
 				local.setMoto(resultado2.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado2.getString("bloco_G"))) {
+			}else if(local.getLocal().equals(resultado2.getString(1))) {
 				local.setMoto(resultado2.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado2.getString("bloco_central"))) {
+			}else if(local.getLocal().equals(resultado2.getString(1))) {
 				local.setMoto(resultado2.getInt("qnt"));
 			}
 		}
 		
 		if(resultado3.next()) {
 			
-			if(local.getLocal().equals(resultado3.getString("bloco_A"))) {
+			if(local.getLocal().equals(resultado3.getString(1))) {
 				local.setEspecial(resultado3.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado3.getString("bloco_B"))) {
+			}else if(local.getLocal().equals(resultado3.getString(1))) {
 				local.setEspecial(resultado3.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado3.getString("bloco_C"))) {
+			}else if(local.getLocal().equals(resultado3.getString(1))) {
 				local.setEspecial(resultado3.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado3.getString("bloco_D"))) {
+			}else if(local.getLocal().equals(resultado3.getString(1))) {
 				local.setEspecial(resultado3.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado3.getString("bloco_E"))) {
+			}else if(local.getLocal().equals(resultado3.getString(1))) {
 				local.setEspecial(resultado3.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado3.getString("bloco_F"))) {
+			}else if(local.getLocal().equals(resultado3.getString(1))) {
 				local.setEspecial(resultado3.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado3.getString("bloco_G"))) {
+			}else if(local.getLocal().equals(resultado3.getString(1))) {
 				local.setEspecial(resultado3.getInt("qnt"));
-			}else if(local.getLocal().equals(resultado3.getString("bloco_central"))) {
+			}else if(local.getLocal().equals(resultado3.getString(1))) {
 				local.setEspecial(resultado3.getInt("qnt"));
 			}
 		}
